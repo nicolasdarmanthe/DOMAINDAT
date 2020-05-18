@@ -1,7 +1,7 @@
 import pandas as pd
 from subInfo_extractor import *
 
-juicy_tbl = get_suburb_info()
+juicy_tbl = get_suburb_info(state = 'ACT', suburb='Braddon', postcode=2612, property_type='unit',room_num=1)
 
 for i in juicy_tbl['series']['seriesInfo']: 
     print("Year:", i['year']) 
