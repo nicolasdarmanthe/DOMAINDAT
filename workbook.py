@@ -9,17 +9,11 @@ for i in juicy_tbl['series']['seriesInfo']:
     for j in i['values']:
         print(str(j), i['values'][str(j)])
 
-df = pd.DataFrame(test, columns = ['year','month','values'])
+df_master = pd.DataFrame()
+for i in range(1,len(juicy_tbl['series']['seriesInfo'])):
+    df = pd.DataFrame.from_dict(juicy_tbl['series']['seriesInfo'][i])
+    df_master = df_master.append(df)
 
-df['ID'] = df.index
-pd.wide_to_long(df, ['median Sold Price','number Sold','highest sold price', 'lowest sold price','5thpcntle','25th pcntle',
-    '75th pcntle','95th pcntle',"medianSaleListingPrice", "numberSaleListing", "highestSaleListingPrice", 
-    "lowestSaleListingPrice", "auctionNumberAuctioned", "auctionNumberSold", "auctionNumberWithdrawn", 
-    "daysOnMarket", "discountPercentage", "medianRentListingPrice", "numberRentListing", "highestRentListingPrice", "lowestRentListingPrice"], 
-    i=['year'], j='month')
+df_master.to_csv('C:\\Users\\nicol\\OneDrive\\Documents\\DOMAIN_PROJ\\DOMAINDAT\\data.csv')
 
 print("Type:", type(df['values'])) 
-
-#todo
-#find better way of indexing into subinfo tbl
-#find how to parse json object and export to csv
