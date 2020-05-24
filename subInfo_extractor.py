@@ -1,4 +1,4 @@
-def get_suburb_info(state = 'ACT', suburb='Braddon', postcode=2612, property_type='house',room_num=3):
+def get_suburb_info(state = 'ACT', suburb='Braddon', postcode=2612, property_type='house',room_num=3, fname='data'):
 
     import requests
     import json
@@ -46,7 +46,7 @@ def get_suburb_info(state = 'ACT', suburb='Braddon', postcode=2612, property_typ
     propCatgry = '&propertyCategory='+property_type
     binsize = '&chronologicalSpan=3' #in months. No better time res unfortunately.
     binstart =  '&tPlusFrom=1'
-    binend = '&tPlusTo=24'
+    binend = '&tPlusTo=60'
     bednum = '&bedrooms='+str(room_num)
     # &values=HighestSoldPrice%2CLowestSoldPrice #use comma (%2C) to separate arguments
     response = requests.post(auth_url, data = {
@@ -63,4 +63,11 @@ def get_suburb_info(state = 'ACT', suburb='Braddon', postcode=2612, property_typ
     url = url_endpoint + thestate + suburbID + propCatgry + binsize + binstart + binend +bednum
     res1 = requests.get(url, headers=auth)    
     juicy_tbl = res1.json()
-    return juicy_tbl
+
+    import pandas as pd
+    df_master = pd.DataFrame()
+    for i in range(1,len(juicy_tbl['series']['seriesInfo'])):
+        df = pd.DataFrame.from_dict(juicy_tbl['series']['seriesInfo'][i])
+        df_master = df_master.append(df)
+
+    df_master.to_csv('.\\'+fname+'.csv')
